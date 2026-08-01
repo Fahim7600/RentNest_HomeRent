@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { X, Calendar, Clock, MessageSquare, Send } from "lucide-react";
+import { X, Calendar, Clock, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Property } from "@/lib/types";
+import { submitRentalRequest } from "@/app/dashboard/tenant/actions";
+import { ApiError } from "@/lib/api-client";
 
 export function RequestToRentModal({
   property,
@@ -14,22 +17,43 @@ export function RequestToRentModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const queryClient = useQueryClient();
   const [moveInDate, setMoveInDate] = useState("");
   const [duration, setDuration] = useState("6");
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      if (!moveInDate) {
+        throw new Error("Please select a desired move-in date.");
+      }
+      const isoStartDate = new Date(moveInDate).toISOString();
+      return await submitRentalRequest({
+        propertyId: property.id,
+        startDate: isoStartDate,
+        duration: Number(duration),
+      });
+    },
+    onSuccess: (data) => {
+      toast.success("Rental request submitted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["tenant-rentals"] });
+      onClose();
+    },
+    onError: (err) => {
+      if (err instanceof ApiError) {
+        toast.error(err.message || "Failed to submit rental request");
+      } else if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Failed to submit rental request");
+      }
+    },
+  });
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success("Rental request created! (Submission wired in next prompt)");
-      onClose();
-    }, 600);
+    mutation.mutate();
   };
 
   return (
@@ -69,6 +93,7 @@ export function RequestToRentModal({
               <input
                 type="date"
                 required
+                min={new Date().toISOString().split("T")[0]}
                 value={moveInDate}
                 onChange={(e) => setMoveInDate(e.target.value)}
                 className="w-full rounded-lg border border-slate-700 bg-slate-800/50 py-2 pl-9 pr-3 text-sm text-white outline-none focus:border-indigo-500"
@@ -97,23 +122,6 @@ export function RequestToRentModal({
             </div>
           </div>
 
-          {/* Message to Landlord */}
-          <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">
-              Message to Landlord (Optional)
-            </label>
-            <div className="relative">
-              <MessageSquare className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-slate-500" />
-              <textarea
-                rows={3}
-                placeholder="Introduce yourself or mention specific requests..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-800/50 py-2 pl-9 pr-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-indigo-500"
-              />
-            </div>
-          </div>
-
           {/* Actions */}
           <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-800 pt-4">
             <button
@@ -125,11 +133,15 @@ export function RequestToRentModal({
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={mutation.isPending}
               className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-2 text-xs font-semibold text-white shadow-lg transition-all hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50"
             >
-              <Send className="h-3.5 w-3.5" />
-              {isSubmitting ? "Submitting..." : "Submit Rental Request"}
+              {mutation.isPending ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Send className="h-3.5 w-3.5" />
+              )}
+              {mutation.isPending ? "Submitting..." : "Submit Rental Request"}
             </button>
           </div>
         </form>
