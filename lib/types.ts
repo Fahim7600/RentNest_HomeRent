@@ -82,5 +82,29 @@ export interface Payment {
   tenant?: User;
   landlord?: User;
   createdAt: string;
-  updatedAt: string;
+// ---------------------------------------------------------------------------
+// Review & Pagination
+// ---------------------------------------------------------------------------
+export interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  tenantId: string;
+  propertyId: string;
+  tenant?: User;
+  createdAt: string;
 }
+
+export interface PaginatedMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage?: number;
+}
+
+export interface PaginatedResult<T> {
+  meta?: PaginatedMeta;
+  data?: T[];
+  result?: T[];
+}
+
