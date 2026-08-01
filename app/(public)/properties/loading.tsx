@@ -1,36 +1,30 @@
 export default function PropertiesLoading() {
   return (
-    <div className="min-h-screen bg-slate-950 py-12 text-slate-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header Skeleton */}
-        <div className="mb-10 space-y-2">
-          <div className="h-8 w-64 animate-pulse rounded-lg bg-slate-900" />
-          <div className="h-4 w-96 animate-pulse rounded bg-slate-900/60" />
-        </div>
+    <div className="min-h-screen bg-slate-950 text-slate-100 py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="h-8 w-64 bg-slate-800 rounded animate-pulse" />
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+        <div className="flex flex-col gap-8 md:flex-row">
           {/* Sidebar Skeleton */}
-          <div className="lg:col-span-1">
-            <div className="h-80 animate-pulse rounded-2xl border border-slate-800 bg-slate-900/60 p-6" />
+          <div className="w-full md:w-64 h-96 rounded-2xl bg-slate-900/60 border border-slate-800 animate-pulse p-6 space-y-4 shrink-0">
+            <div className="h-6 w-32 bg-slate-800 rounded" />
+            <div className="h-10 w-full bg-slate-800/60 rounded" />
+            <div className="h-10 w-full bg-slate-800/60 rounded" />
+            <div className="h-10 w-full bg-slate-800/60 rounded" />
           </div>
 
           {/* Grid Skeleton */}
-          <div className="lg:col-span-3">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="animate-pulse overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60"
-                >
-                  <div className="aspect-[16/10] w-full bg-slate-800" />
-                  <div className="p-5 space-y-3">
-                    <div className="h-5 w-3/4 rounded bg-slate-800" />
-                    <div className="h-4 w-1/2 rounded bg-slate-800/60" />
-                    <div className="h-10 w-full rounded bg-slate-800/40" />
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="flex-1 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-80 rounded-2xl bg-slate-900/60 border border-slate-800 animate-pulse p-4 space-y-4"
+              >
+                <div className="h-44 w-full bg-slate-800 rounded-xl" />
+                <div className="h-5 w-3/4 bg-slate-800 rounded" />
+                <div className="h-4 w-1/2 bg-slate-800/60 rounded" />
+              </div>
+            ))}
           </div>
         </div>
       </div>
