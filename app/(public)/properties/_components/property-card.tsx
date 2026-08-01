@@ -2,15 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Bed, Tag, ArrowRight } from "lucide-react";
 import type { Property } from "@/lib/types";
-
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80";
+import { formatImageUrl } from "@/lib/image";
 
 export function PropertyCard({ property }: { property: Property }) {
-  const imageUrl =
-    property.images && property.images.length > 0 && property.images[0]
+  const rawImage =
+    property.images && property.images.length > 0
       ? property.images[0]
-      : FALLBACK_IMAGE;
+      : undefined;
+
+  const imageUrl = formatImageUrl(rawImage);
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10">

@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80";
+import { formatImageUrl } from "@/lib/image";
 
 export function ImageGallery({
   images,
@@ -13,12 +11,12 @@ export function ImageGallery({
   images?: string[];
   title: string;
 }) {
-  const imageList =
+  const formattedList =
     images && images.length > 0
-      ? images
-      : [FALLBACK_IMAGE];
+      ? images.map((img) => formatImageUrl(img))
+      : [formatImageUrl(undefined)];
 
-  const [activeImage, setActiveImage] = useState(imageList[0]);
+  const [activeImage, setActiveImage] = useState(formattedList[0]);
 
   return (
     <div className="space-y-4">
@@ -35,9 +33,9 @@ export function ImageGallery({
       </div>
 
       {/* Thumbnails */}
-      {imageList.length > 1 && (
+      {formattedList.length > 1 && (
         <div className="flex items-center gap-3 overflow-x-auto pb-2">
-          {imageList.map((img, idx) => (
+          {formattedList.map((img, idx) => (
             <button
               key={idx}
               onClick={() => setActiveImage(img)}
