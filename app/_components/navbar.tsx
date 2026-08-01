@@ -33,6 +33,7 @@ export function Navbar() {
 
   // Read cookies client-side only (avoids hydration mismatch)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(getToken() ? getUser() : undefined);
     setMounted(true);
   }, []);
