@@ -34,7 +34,7 @@ export function ReviewModal({
         comment: comment.trim(),
       });
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Review submitted successfully!");
       queryClient.invalidateQueries({ queryKey: ["tenant-rentals"] });
       queryClient.invalidateQueries({ queryKey: ["property-reviews"] });

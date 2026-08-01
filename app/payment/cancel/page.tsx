@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { XCircle, LayoutDashboard, ArrowLeft } from "lucide-react";
+import { XCircle, LayoutDashboard } from "lucide-react";
 import { Navbar } from "@/app/_components/navbar";
 
 export const metadata: Metadata = {

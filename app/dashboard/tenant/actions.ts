@@ -81,6 +81,20 @@ export async function fetchTenantRentals(filters?: RentalFilters): Promise<{
 }
 
 /**
+ * Fetch a single rental request by ID.
+ * Response shape: single RentalRequest object directly (unwrapped by apiFetch).
+ */
+export async function fetchRentalRequestById(id: string): Promise<RentalRequest | null> {
+  try {
+    return await apiFetch<RentalRequest>(`/rentals/${id}`);
+  } catch (err) {
+    console.error(`Failed to fetch rental request ${id}:`, err);
+    if (err instanceof ApiError) throw err;
+    return null;
+  }
+}
+
+/**
  * Fetch payments history for the logged-in tenant.
  * Response shape: { meta, payments }
  */
@@ -120,6 +134,24 @@ export async function submitRentalRequest(
     method: "POST",
     body: JSON.stringify(payload),
   });
+}
+
+/**
+ * Initiate Stripe checkout session for an APPROVED rental request.
+ * Endpoint: POST /payments/create
+ * Body: { rentalRequestId }
+ * Response shape (unwrapped): { sessionId: string, url: string | null }
+ */
+export async function createPaymentSession(
+  rentalRequestId: string
+): Promise<{ sessionId: string; url: string | null }> {
+  return await apiFetch<{ sessionId: string; url: string | null }>(
+    "/payments/create",
+    {
+      method: "POST",
+      body: JSON.stringify({ rentalRequestId }),
+    }
+  );
 }
 
 /**

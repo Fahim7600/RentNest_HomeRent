@@ -2,7 +2,6 @@
 
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   ArrowLeft,
@@ -13,7 +12,6 @@ import {
   User,
   ShieldCheck,
   Loader2,
-  DollarSign,
 } from "lucide-react";
 import { Navbar } from "@/app/_components/navbar";
 import {
@@ -29,7 +27,6 @@ interface PageProps {
 
 export default function PaymentInitiationPage({ params }: PageProps) {
   const { id } = use(params);
-  const router = useRouter();
 
   const [rentalRequest, setRentalRequest] = useState<RentalRequest | null>(null);
   const [isLoading, setIsLoading] = useState(true);

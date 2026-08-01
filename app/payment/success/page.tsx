@@ -1,15 +1,13 @@
 "use client";
 
 import { Suspense, useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   CheckCircle2,
   Clock,
   RotateCcw,
   LayoutDashboard,
-  Building2,
-  ShieldCheck,
 } from "lucide-react";
 import { Navbar } from "@/app/_components/navbar";
 import { fetchTenantPayments } from "@/app/dashboard/tenant/actions";
@@ -17,7 +15,6 @@ import type { Payment } from "@/lib/types";
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const sessionId = searchParams.get("session_id");
 
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +44,9 @@ function PaymentSuccessContent() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     checkPaymentStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionId]);
 
   return (
