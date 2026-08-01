@@ -76,9 +76,9 @@ function PaymentSuccessContent() {
 
             {/* Payment Summary */}
             <div className="rounded-xl bg-slate-800/50 p-4 border border-slate-700/50 space-y-2 text-xs text-left">
-              <div className="flex justify-between">
+              <div className="flex flex-col gap-1 border-b border-slate-700/50 pb-2">
                 <span className="text-slate-400">Transaction ID</span>
-                <span className="font-mono text-indigo-300">
+                <span className="font-mono text-indigo-300 text-xs break-all">
                   {completedPayment.transactionId || completedPayment.id}
                 </span>
               </div>

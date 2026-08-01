@@ -96,7 +96,7 @@ export function PaymentList() {
                 {data.payments.map((pay) => (
                   <tr key={pay.id} className="hover:bg-slate-800/30 transition-colors">
                     {/* Transaction ID */}
-                    <td className="px-4 py-4 font-mono text-xs text-indigo-300">
+                    <td className="px-4 py-4 font-mono text-xs text-indigo-300 max-w-[220px] truncate" title={pay.transactionId || pay.id}>
                       {pay.transactionId || pay.id}
                     </td>
 
