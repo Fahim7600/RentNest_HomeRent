@@ -3,15 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  MapPin,
-  Bed,
   CheckCircle2,
   User as UserIcon,
-  Phone,
-  Mail,
-  ShieldCheck,
   Send,
-  Building2,
 } from "lucide-react";
 import { getToken, getUser, type CookieUser } from "@/lib/auth";
 import type { Property } from "@/lib/types";

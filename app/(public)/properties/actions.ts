@@ -51,7 +51,7 @@ export async function fetchProperties(params?: PropertyQueryParams): Promise<{
         page: meta.page || 1,
         limit: meta.limit || 10,
         total: meta.total ?? properties.length,
-        totalPage: meta.totalPage ?? Math.ceil((meta.total ?? properties.length) / (meta.limit || 10)) || 1,
+        totalPage: meta.totalPage ?? (Math.ceil((meta.total ?? properties.length) / (meta.limit || 10)) || 1),
       },
     };
   } catch (err) {

@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, useEffect, useTransition } from "react";
-import { Search, MapPin, DollarSign, Filter, RotateCcw, Tag } from "lucide-react";
+import { MapPin, DollarSign, Filter, RotateCcw, Tag } from "lucide-react";
 import { fetchCategories } from "../actions";
 import type { Category } from "@/lib/types";
 

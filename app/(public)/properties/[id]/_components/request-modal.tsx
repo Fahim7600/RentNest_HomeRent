@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Calendar, Clock, MessageSquare, Send, CheckCircle2 } from "lucide-react";
+import { X, Calendar, Clock, MessageSquare, Send } from "lucide-react";
 import { toast } from "sonner";
 import type { Property } from "@/lib/types";
 

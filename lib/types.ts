@@ -82,6 +82,9 @@ export interface Payment {
   tenant?: User;
   landlord?: User;
   createdAt: string;
+  updatedAt: string;
+}
+
 // ---------------------------------------------------------------------------
 // Review & Pagination
 // ---------------------------------------------------------------------------
@@ -107,4 +110,3 @@ export interface PaginatedResult<T> {
   data?: T[];
   result?: T[];
 }
-

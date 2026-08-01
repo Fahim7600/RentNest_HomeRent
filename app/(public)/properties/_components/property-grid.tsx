@@ -4,7 +4,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProperties } from "../actions";
 import { PropertyCard } from "./property-card";
-import { ChevronLeft, ChevronRight, Building2, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Building2 } from "lucide-react";
 
 export function PropertyGrid() {
   const searchParams = useSearchParams();
