@@ -3,16 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  Home,
-  Building2,
-  LogIn,
-  LogOut,
-  LayoutDashboard,
-  UserPlus,
-  Menu,
-  X,
-} from "lucide-react";
+import { Building2, Menu, X } from "lucide-react";
 import { getUser, getToken, clearAuth, type CookieUser } from "@/lib/auth";
 
 // ---------------------------------------------------------------------------
@@ -44,156 +35,136 @@ export function Navbar() {
     router.push("/");
   };
 
+  const gradientStyle = {
+    background:
+      "radial-gradient(ellipse at 18% 50%, rgba(217, 138, 61, 0.45) 0%, transparent 60%), linear-gradient(110deg, #c9702f 0%, #4a2818 20%, #14241b 55%, #0a1410 100%)",
+  };
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/80 backdrop-blur-lg">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-50 py-3 px-4 sm:px-6 lg:px-8">
+      <div
+        style={gradientStyle}
+        className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6 rounded-full border border-white/15 shadow-2xl backdrop-blur-xl relative overflow-hidden"
+      >
         {/* ── Logo ── */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-bold text-white"
+          className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
         >
-          <Building2 className="h-6 w-6 text-indigo-400" />
-          <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+          <Building2 className="h-5 w-5 text-white/80 stroke-[1.5]" />
+          <span className="text-sm font-bold tracking-tight text-white">
             RentNest
           </span>
         </Link>
 
-        {/* ── Desktop links ── */}
-        <div className="hidden items-center gap-1 md:flex">
-          <NavLink href="/" icon={<Home className="h-4 w-4" />}>
-            Home
-          </NavLink>
-          <NavLink
-            href="/properties"
-            icon={<Building2 className="h-4 w-4" />}
-          >
-            Properties
-          </NavLink>
+        {/* ── Desktop Nav Links ── */}
+        <div className="hidden items-center gap-7 md:flex">
+          <NavLink href="/">HOME</NavLink>
+          <NavLink href="/properties">PROPERTIES</NavLink>
 
           {mounted && user ? (
             <>
-              <NavLink
-                href={dashboardPath(user.role)}
-                icon={<LayoutDashboard className="h-4 w-4" />}
-              >
-                Dashboard
-              </NavLink>
+              <NavLink href={dashboardPath(user.role)}>DASHBOARD</NavLink>
 
-              <div className="ml-3 flex items-center gap-3 border-l border-slate-700 pl-4">
-                <span className="text-sm text-slate-300">
-                  {user.name}
-                  <span className="ml-1.5 rounded-full bg-indigo-500/15 px-2 py-0.5 text-xs font-medium text-indigo-400">
+              <div className="ml-2 flex items-center gap-4 border-l border-white/15 pl-6">
+                <span className="flex items-center gap-2 font-mono text-[13px] uppercase tracking-wider text-white/90">
+                  <span>{user.name}</span>
+                  <span className="rounded-full bg-white/10 border border-white/20 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-white/90">
                     {user.role}
                   </span>
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-sm text-slate-400 transition-colors hover:border-red-500/50 hover:text-red-400"
+                  className="font-mono text-[13px] uppercase tracking-wider text-white/70 hover:text-red-300 transition-opacity hover:opacity-100"
                 >
-                  <LogOut className="h-3.5 w-3.5" />
-                  Logout
+                  LOGOUT
                 </button>
               </div>
             </>
           ) : mounted ? (
-            <div className="ml-3 flex items-center gap-2 border-l border-slate-700 pl-4">
+            <div className="ml-2 flex items-center gap-6 border-l border-white/15 pl-6">
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-slate-600 hover:text-white"
+                className="font-mono text-[13px] uppercase tracking-wider text-white/80 hover:text-white transition-opacity hover:opacity-100"
               >
-                <LogIn className="h-3.5 w-3.5" />
-                Sign in
+                SIGN IN
               </Link>
               <Link
                 href="/register"
-                className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-1.5 text-sm font-medium text-white transition-all hover:from-indigo-500 hover:to-violet-500"
+                className="rounded-full bg-slate-950 border border-white/20 px-5 py-2 font-mono text-xs uppercase tracking-wider font-semibold text-white shadow-lg transition-all hover:bg-slate-900 hover:border-white/40"
               >
-                <UserPlus className="h-3.5 w-3.5" />
-                Register
+                REGISTER
               </Link>
             </div>
           ) : null}
         </div>
 
-        {/* ── Mobile hamburger ── */}
+        {/* ── Mobile Hamburger Button ── */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="rounded-lg p-2 text-slate-400 hover:text-white md:hidden"
+          className="rounded-full p-2 text-white/80 hover:text-white md:hidden"
           aria-label="Toggle menu"
         >
-          {isOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
+          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* ── Mobile menu ── */}
+      {/* ── Mobile Expanded Panel ── */}
       {isOpen && (
-        <div className="border-t border-slate-800 bg-slate-950 px-4 pb-4 md:hidden">
-          <div className="flex flex-col gap-1 pt-2">
-            <MobileNavLink
-              href="/"
-              icon={<Home className="h-4 w-4" />}
-              onClick={() => setIsOpen(false)}
-            >
-              Home
+        <div
+          style={gradientStyle}
+          className="mx-auto mt-2 max-w-6xl rounded-3xl border border-white/15 p-5 shadow-2xl md:hidden space-y-3"
+        >
+          <div className="flex flex-col gap-2">
+            <MobileNavLink href="/" onClick={() => setIsOpen(false)}>
+              HOME
             </MobileNavLink>
-            <MobileNavLink
-              href="/properties"
-              icon={<Building2 className="h-4 w-4" />}
-              onClick={() => setIsOpen(false)}
-            >
-              Properties
+            <MobileNavLink href="/properties" onClick={() => setIsOpen(false)}>
+              PROPERTIES
             </MobileNavLink>
 
             {mounted && user ? (
               <>
                 <MobileNavLink
                   href={dashboardPath(user.role)}
-                  icon={<LayoutDashboard className="h-4 w-4" />}
                   onClick={() => setIsOpen(false)}
                 >
-                  Dashboard
+                  DASHBOARD
                 </MobileNavLink>
 
-                <div className="mt-2 border-t border-slate-800 pt-3">
-                  <p className="mb-2 px-3 text-sm text-slate-400">
-                    {user.name}{" "}
-                    <span className="rounded-full bg-indigo-500/15 px-2 py-0.5 text-xs font-medium text-indigo-400">
+                <div className="mt-2 border-t border-white/15 pt-3 flex flex-col gap-2">
+                  <div className="px-3 flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-white/90">
+                    <span>{user.name}</span>
+                    <span className="rounded-full bg-white/10 border border-white/20 px-2 py-0.5 text-[10px] text-white/90">
                       {user.role}
                     </span>
-                  </p>
+                  </div>
                   <button
                     onClick={() => {
                       handleLogout();
                       setIsOpen(false);
                     }}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-400 transition-colors hover:bg-red-500/10"
+                    className="text-left px-3 py-2 font-mono text-xs uppercase tracking-wider text-red-300 hover:text-red-200 transition-opacity hover:opacity-80"
                   >
-                    <LogOut className="h-4 w-4" />
-                    Logout
+                    LOGOUT
                   </button>
                 </div>
               </>
             ) : mounted ? (
-              <div className="mt-2 flex flex-col gap-2 border-t border-slate-800 pt-3">
+              <div className="mt-2 flex flex-col gap-2 border-t border-white/15 pt-3">
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300 transition-colors hover:border-slate-600"
+                  className="px-3 py-2 font-mono text-xs uppercase tracking-wider text-white/80 hover:text-white"
                 >
-                  <LogIn className="h-4 w-4" />
-                  Sign in
+                  SIGN IN
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-2 text-sm font-medium text-white"
+                  className="inline-block rounded-full bg-slate-950 border border-white/20 px-5 py-2 font-mono text-xs uppercase tracking-wider font-semibold text-center text-white shadow-lg"
                 >
-                  <UserPlus className="h-4 w-4" />
-                  Register
+                  REGISTER
                 </Link>
               </div>
             ) : null}
@@ -205,23 +176,20 @@ export function Navbar() {
 }
 
 // ---------------------------------------------------------------------------
-// Sub-components
+// Helper Sub-components
 // ---------------------------------------------------------------------------
 function NavLink({
   href,
-  icon,
   children,
 }: {
   href: string;
-  icon: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <Link
       href={href}
-      className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"
+      className="font-mono text-[13px] uppercase tracking-wider text-white/80 hover:text-white transition-opacity hover:opacity-100"
     >
-      {icon}
       {children}
     </Link>
   );
@@ -229,12 +197,10 @@ function NavLink({
 
 function MobileNavLink({
   href,
-  icon,
   children,
   onClick,
 }: {
   href: string;
-  icon: React.ReactNode;
   children: React.ReactNode;
   onClick?: () => void;
 }) {
@@ -242,9 +208,8 @@ function MobileNavLink({
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"
+      className="px-3 py-2 font-mono text-xs uppercase tracking-wider text-white/80 hover:text-white transition-opacity hover:opacity-100"
     >
-      {icon}
       {children}
     </Link>
   );
