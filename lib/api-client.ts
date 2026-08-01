@@ -46,6 +46,22 @@ export class ApiError extends Error {
 export const BASE_URL = "https://assignment4-programminghero.onrender.com/api";
 
 // ---------------------------------------------------------------------------
+// Universal Auth Token Resolver (supports Browser & Next.js Server Components)
+// ---------------------------------------------------------------------------
+export async function getAuthToken(): Promise<string | undefined> {
+  if (typeof window !== "undefined") {
+    return getToken();
+  }
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    return cookieStore.get("rentnest_token")?.value;
+  } catch {
+    return undefined;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Generic fetch wrapper (unwraps body.data)
 // ---------------------------------------------------------------------------
 export async function apiFetch<T>(
@@ -63,7 +79,7 @@ export async function apiFetchFull<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiSuccessResponse<T>> {
-  const token = getToken();
+  const token = await getAuthToken();
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
