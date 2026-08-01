@@ -15,7 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RentNest — Find Your Perfect Rental Home",
+  title: {
+    default: "RentNest — Find Your Perfect Rental Home",
+    template: "%s | RentNest",
+  },
   description:
     "Browse, rent, and manage residential properties with RentNest. Connecting tenants and landlords seamlessly.",
 };
