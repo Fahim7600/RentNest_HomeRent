@@ -6,6 +6,8 @@ import {
   CheckCircle2,
   User as UserIcon,
   Send,
+  Lock,
+  Wrench,
 } from "lucide-react";
 import { getToken, getUser, type CookieUser } from "@/lib/auth";
 import type { Property } from "@/lib/types";
@@ -25,7 +27,12 @@ export function PropertyDetailsView({ property }: { property: Property }) {
     setMounted(true);
   }, []);
 
+  const status = property.availability || (property.isAvailable ? "AVAILABLE" : "RENTED");
+  const isAvailable = status === "AVAILABLE";
+
   const handleRequestClick = () => {
+    if (!isAvailable) return;
+
     if (!getToken() || !currentUser) {
       router.push(`/login?redirect=/properties/${property.id}`);
       return;
@@ -60,12 +67,18 @@ export function PropertyDetailsView({ property }: { property: Property }) {
               </div>
               <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                  property.isAvailable
+                  status === "AVAILABLE"
                     ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                    : status === "RENTED"
+                    ? "bg-red-500/20 text-red-300 border border-red-500/30"
                     : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
                 }`}
               >
-                {property.isAvailable ? "Available Now" : "Rented"}
+                {status === "AVAILABLE"
+                  ? "Available Now"
+                  : status === "RENTED"
+                  ? "Currently Rented"
+                  : "Under Maintenance"}
               </span>
             </div>
 
@@ -90,16 +103,40 @@ export function PropertyDetailsView({ property }: { property: Property }) {
               </div>
             </div>
 
-            {/* CTA Button */}
-            {showCTA && (
+            {/* CTA Section */}
+            {isAvailable ? (
+              showCTA && (
+                <div className="mt-6">
+                  <button
+                    onClick={handleRequestClick}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-violet-500"
+                  >
+                    <Send className="h-4 w-4" />
+                    Request to Rent
+                  </button>
+                </div>
+              )
+            ) : (
               <div className="mt-6">
                 <button
-                  onClick={handleRequestClick}
-                  disabled={!property.isAvailable}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled
+                  className={`flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3.5 text-sm font-semibold shadow-lg opacity-85 cursor-not-allowed ${
+                    status === "RENTED"
+                      ? "bg-red-950/80 border-red-500/40 text-red-300"
+                      : "bg-amber-950/80 border-amber-500/40 text-amber-300"
+                  }`}
                 >
-                  <Send className="h-4 w-4" />
-                  Request to Rent
+                  {status === "RENTED" ? (
+                    <>
+                      <Lock className="h-4 w-4" />
+                      Currently Rented
+                    </>
+                  ) : (
+                    <>
+                      <Wrench className="h-4 w-4" />
+                      Under Maintenance
+                    </>
+                  )}
                 </button>
               </div>
             )}
@@ -165,11 +202,13 @@ export function PropertyDetailsView({ property }: { property: Property }) {
       </div>
 
       {/* Request Modal */}
-      <RequestToRentModal
-        property={property}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isAvailable && (
+        <RequestToRentModal
+          property={property}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
