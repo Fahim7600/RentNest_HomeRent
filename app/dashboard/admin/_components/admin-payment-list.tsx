@@ -103,7 +103,7 @@ export function AdminPaymentList() {
                     <td className="px-4 py-4 text-xs">
                       <div className="flex items-center gap-1.5 text-slate-300">
                         <User className="h-3.5 w-3.5 text-blue-400 shrink-0" />
-                        <span>{pay.tenant?.name || `Tenant ID: ${pay.tenantId.slice(0, 8)}...`}</span>
+                        <span>{pay.tenant?.name || (pay.tenantId ? `Tenant ID: ${pay.tenantId.slice(0, 8)}...` : "Tenant")}</span>
                       </div>
                     </td>
 
@@ -111,7 +111,7 @@ export function AdminPaymentList() {
                     <td className="px-4 py-4 text-xs">
                       <div className="flex items-center gap-1.5 text-slate-300">
                         <User className="h-3.5 w-3.5 text-purple-400 shrink-0" />
-                        <span>{pay.landlord?.name || `Landlord ID: ${pay.landlordId.slice(0, 8)}...`}</span>
+                        <span>{pay.landlord?.name || (pay.landlordId ? `Landlord ID: ${pay.landlordId.slice(0, 8)}...` : "Landlord")}</span>
                       </div>
                     </td>
 

@@ -160,7 +160,7 @@ export function AdminRequestList() {
                           {req.tenant?.name || "Tenant"}
                         </p>
                         <p className="text-[11px] text-slate-400">
-                          {req.tenant?.email || req.tenantId.slice(0, 8)}
+                          {req.tenant?.email || (req.tenantId ? req.tenantId.slice(0, 8) : "N/A")}
                         </p>
                       </div>
                     </div>
@@ -173,7 +173,7 @@ export function AdminRequestList() {
                         href={`/properties/${req.propertyId}`}
                         className="font-semibold text-white hover:text-indigo-400 line-clamp-1 transition-colors text-xs"
                       >
-                        {req.property?.title || `ID: ${req.propertyId.slice(0, 8)}...`}
+                        {req.property?.title || (req.propertyId ? `ID: ${req.propertyId.slice(0, 8)}...` : "Property")}
                       </Link>
                       <p className="text-[11px] text-slate-400 line-clamp-1">
                         {req.property?.location}

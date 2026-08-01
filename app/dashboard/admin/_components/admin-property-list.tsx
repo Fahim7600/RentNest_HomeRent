@@ -118,7 +118,7 @@ export function AdminPropertyList() {
                     <td className="px-4 py-4 text-xs">
                       <div className="flex items-center gap-1.5 text-slate-300">
                         <User className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
-                        <span>{prop.landlord?.name || `ID: ${prop.landlordId.slice(0, 8)}...`}</span>
+                        <span>{prop.landlord?.name || (prop.landlordId ? `ID: ${prop.landlordId.slice(0, 8)}...` : "Landlord")}</span>
                       </div>
                     </td>
 
