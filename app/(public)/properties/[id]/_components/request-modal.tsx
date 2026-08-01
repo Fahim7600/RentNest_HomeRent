@@ -33,7 +33,7 @@ export function RequestToRentModal({
         duration: Number(duration),
       });
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Rental request submitted successfully!");
       queryClient.invalidateQueries({ queryKey: ["tenant-rentals"] });
       onClose();
