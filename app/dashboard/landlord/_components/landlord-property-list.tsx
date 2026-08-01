@@ -12,15 +12,12 @@ import {
   Edit,
   Trash2,
   MapPin,
-  Tag,
-  DollarSign,
   ChevronLeft,
   ChevronRight,
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { ApiError } from "@/lib/api-client";
-import type { Property } from "@/lib/types";
 
 export function LandlordPropertyList() {
   const queryClient = useQueryClient();

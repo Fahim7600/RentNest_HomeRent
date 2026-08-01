@@ -7,15 +7,11 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  Building2,
   MapPin,
   DollarSign,
-  Tag,
   ImageIcon,
   CheckCircle2,
   Loader2,
-  Plus,
-  X,
   Info,
 } from "lucide-react";
 import { fetchCategories } from "@/app/(public)/properties/actions";
@@ -27,7 +23,7 @@ const propertySchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   location: z.string().min(2, "Location is required"),
-  price: z.coerce.number().min(1, "Price must be greater than 0"),
+  price: z.number().min(1, "Price must be greater than 0"),
   propertyType: z.string().min(1, "Please select or specify a property type"),
   categoryId: z.string().min(1, "Please select a category"),
   availability: z.enum(["AVAILABLE", "RENTED", "MAINTENANCE"]),
@@ -40,7 +36,6 @@ type PropertyFormValues = z.infer<typeof propertySchema>;
 export function PropertyForm({ initialData }: { initialData?: Property }) {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isEdit = !!initialData;
@@ -56,7 +51,6 @@ export function PropertyForm({ initialData }: { initialData?: Property }) {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm<PropertyFormValues>({
     resolver: zodResolver(propertySchema),
@@ -76,8 +70,7 @@ export function PropertyForm({ initialData }: { initialData?: Property }) {
   useEffect(() => {
     fetchCategories()
       .then((res) => setCategories(res))
-      .catch((err) => console.error("Failed to load categories:", err))
-      .finally(() => setIsLoadingCategories(false));
+      .catch((err) => console.error("Failed to load categories:", err));
   }, []);
 
   const onSubmit = async (values: PropertyFormValues) => {
@@ -159,7 +152,7 @@ export function PropertyForm({ initialData }: { initialData?: Property }) {
               id="price"
               type="number"
               placeholder="1200"
-              {...register("price")}
+              {...register("price", { valueAsNumber: true })}
               className={`w-full rounded-xl border bg-slate-800/50 py-2.5 pl-9 pr-4 text-sm text-white placeholder:text-slate-500 outline-none focus:border-indigo-500 ${
                 errors.price ? "border-red-500" : "border-slate-700"
               }`}
