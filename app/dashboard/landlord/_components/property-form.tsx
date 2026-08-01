@@ -51,6 +51,8 @@ export function PropertyForm({ initialData }: { initialData?: Property }) {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<PropertyFormValues>({
     resolver: zodResolver(propertySchema),
@@ -67,11 +69,19 @@ export function PropertyForm({ initialData }: { initialData?: Property }) {
     },
   });
 
+  const selectedCategoryId = watch("categoryId");
+  const selectedCategoryObj = categories.find((c) => c.id === selectedCategoryId);
+
   useEffect(() => {
     fetchCategories()
-      .then((res) => setCategories(res))
+      .then((res) => {
+        setCategories(res);
+        if (!initialData?.categoryId && res.length > 0) {
+          setValue("categoryId", res[0].id);
+        }
+      })
       .catch((err) => console.error("Failed to load categories:", err));
-  }, []);
+  }, [initialData, setValue]);
 
   const onSubmit = async (values: PropertyFormValues) => {
     setIsSubmitting(true);
@@ -163,46 +173,58 @@ export function PropertyForm({ initialData }: { initialData?: Property }) {
           )}
         </div>
 
-        {/* Property Type */}
-        <div>
-          <label htmlFor="propertyType" className="block text-xs font-medium text-slate-300 mb-1.5">
-            Property Type
-          </label>
-          <select
-            id="propertyType"
-            {...register("propertyType")}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-2.5 px-3 text-sm text-white outline-none focus:border-indigo-500 appearance-none"
-          >
-            <option value="APARTMENT" className="bg-slate-900">Apartment</option>
-            <option value="CONDO" className="bg-slate-900">Condo</option>
-            <option value="STUDIO" className="bg-slate-900">Studio</option>
-            <option value="HOUSE" className="bg-slate-900">House / Villa</option>
-            <option value="DUPLEX" className="bg-slate-900">Duplex</option>
-          </select>
-          {errors.propertyType && (
-            <p className="mt-1 text-xs text-red-400">{errors.propertyType.message}</p>
-          )}
-        </div>
-
-        {/* Category */}
+        {/* Category (Fetched from Backend DB) */}
         <div>
           <label htmlFor="categoryId" className="block text-xs font-medium text-slate-300 mb-1.5">
-            Category
+            Category (Rental Sector)
           </label>
           <select
             id="categoryId"
             {...register("categoryId")}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-2.5 px-3 text-sm text-white outline-none focus:border-indigo-500 appearance-none"
+            className={`w-full rounded-xl border bg-slate-800/50 py-2.5 px-3 text-sm text-white outline-none focus:border-indigo-500 appearance-none ${
+              errors.categoryId ? "border-red-500" : "border-slate-700"
+            }`}
           >
-            <option value="" className="bg-slate-900">Select Category</option>
+            {categories.length === 0 && (
+              <option value="" className="bg-slate-900">Loading categories...</option>
+            )}
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id} className="bg-slate-900">
                 {cat.name}
               </option>
             ))}
           </select>
+          {selectedCategoryObj?.description && (
+            <p className="mt-1 text-[11px] text-slate-400">
+              {selectedCategoryObj.description}
+            </p>
+          )}
           {errors.categoryId && (
             <p className="mt-1 text-xs text-red-400">{errors.categoryId.message}</p>
+          )}
+        </div>
+
+        {/* Property Type / Layout */}
+        <div>
+          <label htmlFor="propertyType" className="block text-xs font-medium text-slate-300 mb-1.5">
+            Property Subtype / Architecture
+          </label>
+          <select
+            id="propertyType"
+            {...register("propertyType")}
+            className={`w-full rounded-xl border bg-slate-800/50 py-2.5 px-3 text-sm text-white outline-none focus:border-indigo-500 appearance-none ${
+              errors.propertyType ? "border-red-500" : "border-slate-700"
+            }`}
+          >
+            <option value="APARTMENT" className="bg-slate-900">Apartment Unit</option>
+            <option value="CONDO" className="bg-slate-900">Condominium Suite</option>
+            <option value="STUDIO" className="bg-slate-900">Studio Room</option>
+            <option value="HOUSE" className="bg-slate-900">Independent House / Villa</option>
+            <option value="DUPLEX" className="bg-slate-900">Multi-floor Duplex</option>
+            <option value="PENTHOUSE" className="bg-slate-900">Rooftop Penthouse</option>
+          </select>
+          {errors.propertyType && (
+            <p className="mt-1 text-xs text-red-400">{errors.propertyType.message}</p>
           )}
         </div>
       </div>
