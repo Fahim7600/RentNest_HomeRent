@@ -11,6 +11,18 @@ export interface PropertyQueryParams {
   limit?: string | number;
 }
 
+function normalizeProperty(raw: Property): Property {
+  return {
+    ...raw,
+    rentAmount: raw.price ?? raw.rentAmount ?? 0,
+    isAvailable:
+      raw.availability !== undefined
+        ? raw.availability === "AVAILABLE"
+        : (raw.isAvailable ?? true),
+    bedrooms: raw.bedrooms ?? 1,
+  };
+}
+
 export async function fetchProperties(params?: PropertyQueryParams): Promise<{
   properties: Property[];
   meta: { page: number; limit: number; total: number; totalPage: number };
@@ -30,28 +42,36 @@ export async function fetchProperties(params?: PropertyQueryParams): Promise<{
   try {
     const rawData = await apiFetch<PaginatedResult<Property> | Property[]>(endpoint);
 
+    let rawList: Property[] = [];
+    let metaPage = Number(params?.page) || 1;
+    let metaLimit = Number(params?.limit) || 10;
+    let metaTotal = 0;
+    let metaTotalPages = 1;
+
     if (Array.isArray(rawData)) {
-      return {
-        properties: rawData,
-        meta: { page: 1, limit: rawData.length || 10, total: rawData.length, totalPage: 1 },
-      };
+      rawList = rawData;
+      metaTotal = rawData.length;
+    } else if (rawData) {
+      rawList = rawData.properties || rawData.data || rawData.result || [];
+      if (rawData.meta) {
+        metaPage = rawData.meta.page ?? metaPage;
+        metaLimit = rawData.meta.limit ?? metaLimit;
+        metaTotal = rawData.meta.total ?? rawList.length;
+        metaTotalPages = (rawData.meta.totalPages ?? rawData.meta.totalPage ?? Math.ceil(metaTotal / metaLimit)) || 1;
+      } else {
+        metaTotal = rawList.length;
+      }
     }
 
-    const properties = rawData.data || rawData.result || [];
-    const meta = rawData.meta || {
-      page: Number(params?.page) || 1,
-      limit: Number(params?.limit) || 10,
-      total: properties.length,
-      totalPage: 1,
-    };
+    const properties = rawList.map(normalizeProperty);
 
     return {
       properties,
       meta: {
-        page: meta.page || 1,
-        limit: meta.limit || 10,
-        total: meta.total ?? properties.length,
-        totalPage: meta.totalPage ?? (Math.ceil((meta.total ?? properties.length) / (meta.limit || 10)) || 1),
+        page: metaPage,
+        limit: metaLimit,
+        total: metaTotal,
+        totalPage: metaTotalPages,
       },
     };
   } catch (err) {
@@ -65,7 +85,8 @@ export async function fetchProperties(params?: PropertyQueryParams): Promise<{
 
 export async function fetchPropertyById(id: string): Promise<Property | null> {
   try {
-    return await apiFetch<Property>(`/properties/${id}`);
+    const raw = await apiFetch<Property>(`/properties/${id}`);
+    return raw ? normalizeProperty(raw) : null;
   } catch (err) {
     console.error(`Failed to fetch property ${id}:`, err);
     return null;
@@ -74,11 +95,15 @@ export async function fetchPropertyById(id: string): Promise<Property | null> {
 
 export async function fetchPropertyReviews(id: string): Promise<Review[]> {
   try {
-    const data = await apiFetch<Review[] | { result?: Review[]; data?: Review[] }>(
-      `/properties/${id}/reviews`
-    );
-    if (Array.isArray(data)) return data;
-    return data.data || data.result || [];
+    const rawData = await apiFetch<
+      PaginatedResult<Review> | Review[] | { reviews?: Review[]; data?: Review[]; result?: Review[] }
+    >(`/properties/${id}/reviews`);
+
+    if (Array.isArray(rawData)) return rawData;
+    if (rawData) {
+      return rawData.reviews || rawData.data || rawData.result || [];
+    }
+    return [];
   } catch {
     return [];
   }
@@ -86,11 +111,15 @@ export async function fetchPropertyReviews(id: string): Promise<Review[]> {
 
 export async function fetchCategories(): Promise<Category[]> {
   try {
-    const data = await apiFetch<Category[] | { data?: Category[]; result?: Category[] }>(
-      "/categories"
-    );
-    if (Array.isArray(data)) return data;
-    return data.data || data.result || [];
+    const rawData = await apiFetch<
+      Category[] | { categories?: Category[]; data?: Category[] }
+    >("/categories");
+
+    if (Array.isArray(rawData)) return rawData;
+    if (rawData) {
+      return rawData.categories || rawData.data || [];
+    }
+    return [];
   } catch {
     return [];
   }

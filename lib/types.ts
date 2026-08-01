@@ -18,6 +18,7 @@ export interface User {
 export interface Category {
   id: string;
   name: string;
+  description?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -28,11 +29,14 @@ export interface Property {
   title: string;
   description: string;
   location: string;
-  rentAmount: number;
-  bedrooms: number;
+  rentAmount?: number;
+  price?: number;
+  bedrooms?: number;
+  propertyType?: string;
   amenities: string[];
   images: string[];
-  isAvailable: boolean;
+  isAvailable?: boolean;
+  availability?: string;
   landlordId: string;
   categoryId: string;
   category?: Category;
@@ -102,11 +106,14 @@ export interface PaginatedMeta {
   page: number;
   limit: number;
   total: number;
+  totalPages: number;
   totalPage?: number;
 }
 
 export interface PaginatedResult<T> {
   meta?: PaginatedMeta;
+  properties?: T[];
+  reviews?: T[];
   data?: T[];
   result?: T[];
 }
