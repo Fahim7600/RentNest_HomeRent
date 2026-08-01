@@ -56,9 +56,8 @@ export function AdminUserList() {
 
       return { previousData };
     },
-    onSuccess: (responseData, variables) => {
-      const actionText = variables.status === "BANNED" ? "banned" : "activated";
-      toast.success(`User successfully ${actionText}!`);
+    onSuccess: (responseData) => {
+      toast.success(responseData.message || "User status updated successfully!");
     },
     onError: (err, _variables, context) => {
       if (context?.previousData) {

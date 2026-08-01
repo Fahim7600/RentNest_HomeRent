@@ -1,4 +1,4 @@
-import { apiFetch, ApiError } from "@/lib/api-client";
+import { apiFetch, apiFetchFull, ApiError } from "@/lib/api-client";
 import type { User, Property, RentalRequest, Payment, Category } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
@@ -118,11 +118,12 @@ export async function fetchUsers(filters?: UserFilters): Promise<{
 export async function updateUserStatus(
   id: string,
   status: "ACTIVE" | "BANNED"
-): Promise<User> {
-  return await apiFetch<User>(`/admin/users/${id}`, {
+): Promise<{ user: User; message: string }> {
+  const res = await apiFetchFull<User>(`/admin/users/${id}`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   });
+  return { user: res.data, message: res.message };
 }
 
 /**
