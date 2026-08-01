@@ -2,6 +2,8 @@
 
 RentNest is a high-performance, responsive Next.js 15 Web Application designed for browsing, listing, renting, and managing residential properties. Built with Next.js 15 App Router, TypeScript, Tailwind CSS v4, and React Query v5, RentNest provides tailored experiences for **Tenants**, **Landlords**, and **Admins**.
 
+🌐 **Live Application**: [https://rent-nest-home-rent.vercel.app/](https://rent-nest-home-rent.vercel.app/)
+
 ---
 
 ## 🔑 Seeded Demo Credentials
@@ -52,7 +54,9 @@ Use these pre-seeded backend accounts to test role-based access control and dash
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started & Deployment
+
+- 🌐 **Live Production Link**: [https://rent-nest-home-rent.vercel.app/](https://rent-nest-home-rent.vercel.app/)
 
 ### Prerequisites
 - **Node.js**: `v18.x` or higher
