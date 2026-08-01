@@ -30,7 +30,7 @@ const registerSchema = z.object({
     .min(1, "Phone number is required")
     .regex(/^\+?[\d\s-]{7,15}$/, "Please enter a valid phone number"),
   role: z.enum(["TENANT", "LANDLORD"], {
-    required_error: "Please select a role",
+    error: "Please select a role",
   }),
 });
 
