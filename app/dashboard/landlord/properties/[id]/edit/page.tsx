@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Edit } from "lucide-react";
 import { Navbar } from "@/app/_components/navbar";
-import { fetchPropertyById } from "@/app/(public)/properties/actions";
+import { fetchPropertyForEdit } from "../../../actions";
 import { PropertyForm } from "../../../_components/property-form";
 
 interface PageProps {
@@ -12,7 +12,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const property = await fetchPropertyById(id);
+  const property = await fetchPropertyForEdit(id);
   return {
     title: property ? `Edit ${property.title} — Landlord Portal` : "Edit Property — Landlord Portal",
   };
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function EditPropertyPage({ params }: PageProps) {
   const { id } = await params;
-  const property = await fetchPropertyById(id);
+  const property = await fetchPropertyForEdit(id);
 
   if (!property) {
     notFound();

@@ -86,6 +86,20 @@ export async function fetchLandlordProperties(filters?: PropertyFilters): Promis
 }
 
 /**
+ * Fetch a property owned by the landlord for editing (handles RENTED / MAINTENANCE properties).
+ */
+export async function fetchPropertyForEdit(id: string): Promise<Property | null> {
+  try {
+    const res = await fetchLandlordProperties({ limit: 100 });
+    const found = res.properties.find((p) => p.id === id);
+    if (found) return found;
+  } catch (err) {
+    console.error("Failed to fetch landlord property for edit:", err);
+  }
+  return null;
+}
+
+/**
  * Create a new property.
  * Endpoint: POST /landlord/properties
  */
